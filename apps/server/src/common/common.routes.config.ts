@@ -3,11 +3,11 @@ import type { Application } from "express";
 
 export abstract class CommonRoutesConfig {
 
-  private routeName: string;
-  private version: string;
+  protected routeName: string;
+  protected version: string;
   protected app: Application;
 
-  public static statusMessage = {
+  public static RESPONSE_STATUS = {
     FAILED: "Failed",
     SUCCESS: "Success",
   };

@@ -10,7 +10,7 @@ export class NotValidRoutes extends CommonRoutesConfig {
     super(app, "Not Valid route", "0.0.1");
   }
 
-  configureRoute(): Application {
+  public configureRoute(): Application {
 
     this.app.use(express.static(path.join(__dirname, "assets/images")));
 
