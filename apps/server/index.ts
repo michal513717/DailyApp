@@ -8,7 +8,10 @@ import * as http from "http";
 // import initFireBaseApp from "./src/lib/firebase";
 import { env } from "./src/utils/env";
 
+import { DatabaseManager } from "./src/managers/databaseManager";
 // initFireBaseApp();
+
+const a = new DatabaseManager();
 
 import { CommonRoutesConfig } from "./src/common/common.routes.config";
 import { InitRoutes } from "./src/routes/initRoutes.routes";
