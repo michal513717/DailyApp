@@ -5,16 +5,15 @@ import cors from "cors";
 import express from "express";
 import * as http from "http";
 
-// import initFireBaseApp from "./src/lib/firebase";
 import { env } from "./src/utils/env";
 
 import { DatabaseManager } from "./src/managers/databaseManager";
-// initFireBaseApp();
 
 const a = new DatabaseManager();
 
 import { CommonRoutesConfig } from "./src/common/common.routes.config";
 import { InitRoutes } from "./src/routes/initRoutes.routes";
+import { AuthRoutes } from "./src/routes/auth.routes";
 
 //! MUST BE LAST
 import { NotValidRoutes } from "./src/routes/notValid.routes";
@@ -31,6 +30,7 @@ const routes = [] as Array<CommonRoutesConfig>;
 app.use(bodyParser.urlencoded({ extended: true }));
 
 routes.push(new InitRoutes(app));
+routes.push(new AuthRoutes(app));
 routes.push(new NotValidRoutes(app));
 
 const runningMessageMobile = `Mobile - Server running at http://10.0.2.2:${port}`;
