@@ -1,5 +1,5 @@
 import type { Response } from "express";
-import { CommonRoutesConfig } from "../common/common.routes.config";
+import { CommonRoutesConfig } from "../../common/common.routes.config";
 import { ErrorCodes } from "./errorCodes";
 
 export const internalServerErrorResponse =

@@ -6,44 +6,61 @@ export class DatabaseManager {
 
   private mongoClient!: mongoDB.Db;
 
-  constructor(){
+  constructor() {
 
     this.connectDataBase();
   };
 
   private async connectDataBase(): Promise<void> {
-    
+
     const client = await connectToDatabase();
-    
-    if(client !== null){
+
+    if (client !== null) {
       this.mongoClient = client;
     };
   };
 
-  public async getDatabase(name: string): Promise<mongoDB.Collection | null> {
+  private async getDatabase(name: string): Promise<mongoDB.Collection | null> {
     try {
-      
-      return this.mongoClient.collection("Todo")
-    } catch(err) {
-      
+
+      return this.mongoClient.collection(name);
+    } catch (err) {
+
       console.log(`Database dosent exits`, err)
       return null;
     }
   }
-  
+
   public async getDataWithArrayFormat<T extends {}>(name: string): Promise<WithId<T>[] | null> {
     try {
       const collection = this.mongoClient.collection<T>(name);
 
       const data = await collection.find({}).toArray();
-      
+
       return data;
-    } catch(err){
+    } catch (err) {
 
       console.log(`Get data with array format error`, err);
       return null;
     };
   };
+
+  public async addRecord(name: string, data: Record<string, string>): Promise<void> {
+    try {
+      const db = await this.getDatabase(name) as mongoDB.Collection;
+
+      if (db === null) {
+        throw Error("Db not exist");
+      };
+
+      db.insert(data);
+    } catch (error) {
+
+      console.log(`Error during inserting to Db`, error);
+    }
+  };
 };
 
-// export const databaseManager = new DatabaseManager();
+const instance = new DatabaseManager();
+
+export default instance;

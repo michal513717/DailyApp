@@ -1,7 +1,9 @@
 import jwt from "jsonwebtoken";
+import z from "zod";
 import { env } from "../utils/env";
 import { AuthTokens } from "./../models/auth.models";
-import { TokenExpiredError, InvalidTokenError } from "../utils/errors";
+import { TokenExpiredError, InvalidTokenError, AuthFailed } from "../utils/errors/errors";
+import { loginSchema } from "./../utils/schema/auth.schema";
 
 export class AuthServices {
 
@@ -32,4 +34,22 @@ export class AuthServices {
       refreshToken
     };
   };
+
+  public static login(data: LoginType): void {
+    try {
+      const { userName, password } = loginSchema.parse(data);
+
+
+
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        throw new AuthFailed();
+      };
+    };
+  };
+};
+
+type LoginType = {
+  userName: string;
+  passwrod: string;
 };

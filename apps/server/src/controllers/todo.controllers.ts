@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { z } from "zod";
-import { zodErrorResponse } from "../utils/zodErrorResponse.validation";
+import { zodErrorResponse } from "../utils/errors/zodErrorResponse.validation";
 
 
 export const getTasksHandler = (req: Request, res: Response) => {
