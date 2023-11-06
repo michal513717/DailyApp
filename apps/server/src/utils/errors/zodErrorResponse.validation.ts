@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { CommonRoutesConfig } from "../common/common.routes.config";
+import { CommonRoutesConfig } from "../../common/common.routes.config";
 import { ErrorCodes } from "./errorCodes";
 
 export function zodErrorResponse(res: Response, err: Zod.ZodError) {
