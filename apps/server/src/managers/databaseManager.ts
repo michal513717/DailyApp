@@ -1,3 +1,6 @@
+//@ts-nocheck
+//TODO remove (changed to firebase)
+
 import { connectToDatabase } from "../database";
 import * as mongoDB from 'mongodb';
 import type { WithId } from "mongodb";

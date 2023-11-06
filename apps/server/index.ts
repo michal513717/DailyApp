@@ -6,10 +6,7 @@ import express from "express";
 import * as http from "http";
 
 import { env } from "./src/utils/env";
-
-import { DatabaseManager } from "./src/managers/databaseManager";
-
-const a = new DatabaseManager();
+import initFireBaseApp from "./src/lib/firebase";
 
 import { CommonRoutesConfig } from "./src/common/common.routes.config";
 import { InitRoutes } from "./src/routes/initRoutes.routes";
@@ -17,6 +14,9 @@ import { AuthRoutes } from "./src/routes/auth.routes";
 
 //! MUST BE LAST
 import { NotValidRoutes } from "./src/routes/notValid.routes";
+import { FirebaseHelper } from "./src/utils/firebase/firebaseHelper";
+
+initFireBaseApp();
 
 const app = express();
 const port = env.PORT;
