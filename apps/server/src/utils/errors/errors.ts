@@ -1,4 +1,4 @@
-import { ErrorWithCode } from "./error";
+import { ErrorWithCode } from "./errorWithCode";
 import { ErrorCodes } from "./errorCodes";
 
 

@@ -1,8 +1,11 @@
-import type { ObjectId } from "mongodb";
-
 export type TodoCollectionRecord = {
   description: string;
   category: string;
   isDone: boolean;
   date: Date;
-} & ObjectId;
+};
+
+export type UserCollectionRecord = {
+  userName: string;
+  password: string;
+};
