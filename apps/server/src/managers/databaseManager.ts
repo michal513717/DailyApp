@@ -1,65 +1,123 @@
-//@ts-nocheck
-//TODO remove (changed to firebase)
-
-import { connectToDatabase } from "../database";
-import * as mongoDB from 'mongodb';
-import type { WithId } from "mongodb";
+import { Collections, RecordValue } from "../models/database.models";
+import { FirebaseHelper } from "../utils/firebase/firebaseHelper";
 
 export class DatabaseManager {
-
-  private mongoClient!: mongoDB.Db;
+  
+  private static instance: DatabaseManager;
+  private db!: FirebaseFirestore.Firestore;
+  private collections!: Collections;
 
   constructor() {
 
-    this.connectDataBase();
+    this.init();
   };
 
-  private async connectDataBase(): Promise<void> {
-
-    const client = await connectToDatabase();
-
-    if (client !== null) {
-      this.mongoClient = client;
-    };
-  };
-
-  private async getDatabase(name: string): Promise<mongoDB.Collection | null> {
-    try {
-
-      return this.mongoClient.collection(name);
-    } catch (err) {
-
-      console.log(`Database dosent exits`, err)
-      return null;
+  public static getInstance(): DatabaseManager {
+    if(!DatabaseManager.instance) {
+      DatabaseManager.instance = new DatabaseManager();
     }
+
+    return DatabaseManager.instance;
   }
 
-  public async getDataWithArrayFormat<T extends {}>(name: string): Promise<WithId<T>[] | null> {
-    try {
-      const collection = this.mongoClient.collection<T>(name);
+  private init(): void {
 
-      const data = await collection.find({}).toArray();
-
-      return data;
-    } catch (err) {
-
-      console.log(`Get data with array format error`, err);
-      return null;
+    this.collections = {
+      USERS_COLLECTION: this.db.collection("usersCollection"),
+      TODO_COLLECTION: this.db.collection("todoCollection")
     };
   };
 
-  public async addRecord(name: string, data: Record<string, string>): Promise<void> {
+  public async getCollection(
+    collectionName: keyof Collections
+  ) : Promise<FirebaseFirestore.CollectionReference>{
+    return this.db.collection(collectionName);
+  };
+
+  public async getByDocId(
+    collectionName: keyof Collections,
+    docID: string
+  ){
     try {
-      const db = await this.getDatabase(name) as mongoDB.Collection;
-
-      if (db === null) {
-        throw Error("Db not exist");
-      };
-
-      db.insert(data);
+      return this.collections[collectionName].doc(docID);   
     } catch (error) {
+      return null;
+    }
+  };
 
-      console.log(`Error during inserting to Db`, error);
+  public async getRecordById<T extends object>(
+    collectionName: keyof Collections,
+    recordID: string,
+    recordValue: RecordValue
+  ): Promise<T | null> {
+    try {
+      const record = await this.collections[collectionName]
+        .where(recordID, "==", recordValue)
+        .limit(1)
+        .withConverter(FirebaseHelper.converterAssignTypes<T>())
+        .get();
+
+      return record.docs[0] !== undefined ? record.docs[0].data() : null;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  };
+
+  public async getRecordsById<T extends object>(
+    collectionName: keyof Collections,
+    recordID: string,
+    recordValue: RecordValue
+  ): Promise<Array<T> | []> {
+    try {
+      const data = await this.collections[collectionName]
+        .where(recordID, "==", recordValue)
+        .withConverter(FirebaseHelper.converterAssignTypes<T>())
+        .get();
+
+      const parsedData = data.docs.map((item) =>
+        Object.assign({ id: item.id }, item.data())
+      );
+
+      return parsedData;
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
+  };
+
+  //? Need to specify data?
+  public async addRecord(
+    collectionName: keyof Collections,
+    data: any
+  ): Promise<void> {
+    try {
+      await this.collections[collectionName].add(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  public async deleteRecord(
+    collectionName: keyof Collections,
+    docID: string
+  ): Promise<void> {
+    try {
+      await this.collections[collectionName].doc(docID).delete();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  public async updateRecord(
+    collectionName: keyof Collections,
+    docID: string,
+    updateData: object
+  ): Promise<void> {
+    try {
+      await this.collections[collectionName].doc(docID).update(updateData);
+    } catch (error) {
+      console.log(error);
     }
   };
 };

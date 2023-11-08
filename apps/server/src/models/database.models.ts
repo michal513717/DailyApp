@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase-admin/firestore";
+
 export type TodoCollectionRecord = {
   description: string;
   category: string;
@@ -9,3 +11,10 @@ export type UserCollectionRecord = {
   userName: string;
   password: string;
 };
+
+export type Collections = {
+  USERS_COLLECTION: FirebaseFirestore.CollectionReference;
+  TODO_COLLECTION: FirebaseFirestore.CollectionReference;
+};
+
+export type RecordValue = string | boolean | Timestamp | number;
