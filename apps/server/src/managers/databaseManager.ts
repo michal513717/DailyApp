@@ -1,24 +1,19 @@
+import { Manager } from "../common/common.manager.config";
 import { Collections, RecordValue } from "../models/database.models";
 import { FirebaseHelper } from "../utils/firebase/firebaseHelper";
 
-export class DatabaseManager {
-  
-  private static instance: DatabaseManager;
+export class DatabaseManager extends Manager {
+
+  protected static instance: DatabaseManager;
   private db!: FirebaseFirestore.Firestore;
   private collections!: Collections;
 
   constructor() {
 
+    super();
+
     this.init();
   };
-
-  public static getInstance(): DatabaseManager {
-    if(!DatabaseManager.instance) {
-      DatabaseManager.instance = new DatabaseManager();
-    }
-
-    return DatabaseManager.instance;
-  }
 
   private init(): void {
 
@@ -30,16 +25,16 @@ export class DatabaseManager {
 
   public async getCollection(
     collectionName: keyof Collections
-  ) : Promise<FirebaseFirestore.CollectionReference>{
+  ): Promise<FirebaseFirestore.CollectionReference> {
     return this.db.collection(collectionName);
   };
 
   public async getByDocId(
     collectionName: keyof Collections,
     docID: string
-  ){
+  ) {
     try {
-      return this.collections[collectionName].doc(docID);   
+      return this.collections[collectionName].doc(docID);
     } catch (error) {
       return null;
     }
@@ -52,7 +47,7 @@ export class DatabaseManager {
   ): Promise<T | null> {
     try {
       const record = await this.collections[collectionName]
-        .where(recordID, "==", recordValue)
+        .where(recordID, FirebaseHelper.OPERATORS.EQUAL, recordValue)
         .limit(1)
         .withConverter(FirebaseHelper.converterAssignTypes<T>())
         .get();
@@ -71,7 +66,7 @@ export class DatabaseManager {
   ): Promise<Array<T> | []> {
     try {
       const data = await this.collections[collectionName]
-        .where(recordID, "==", recordValue)
+        .where(recordID, FirebaseHelper.OPERATORS.EQUAL, recordValue)
         .withConverter(FirebaseHelper.converterAssignTypes<T>())
         .get();
 

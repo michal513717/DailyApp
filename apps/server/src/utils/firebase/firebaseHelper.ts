@@ -3,32 +3,28 @@ import { COLLECTION_NAMES } from './collectionsNames';
 
 export class FirebaseHelper {
 
-  public collections: {
+  public collections!: {
     usersCollection: FirebaseFirestore.CollectionReference;
     todoCollection: FirebaseFirestore.CollectionReference;
   };
 
-  private static instance: FirebaseHelper;
-
-  private db: FirebaseFirestore.Firestore;
-
-  constructor(){
-
-    this.db = getFirestore();
-
-    this.collections = {
-      usersCollection: this.db.collection(COLLECTION_NAMES.DB_USERS),
-      todoCollection: this.db.collection(COLLECTION_NAMES.DB_TODO)
-    }
+  public static OPERATORS: Record<string, FirebaseFirestore.WhereFilterOp> = {
+    LESS: '<',
+    LESS_EQUAL: '<=',
+    EQUAL: '==',
+    NOT_EQUAL: '!=',
+    MORE_EQUAL: '>=',
+    MORE: '>',
+    ARRAY_INCLUDE: 'array-contains',
+    IN: 'in',
+    NOT_IN: 'not-in',
+    ARRAY_CONTAINER_ANY: 'array-contains-any'
   };
 
-  public static getInstance(): FirebaseHelper {
-    if(!FirebaseHelper.instance) {
-      FirebaseHelper.instance = new FirebaseHelper();
-    }
-
-    return FirebaseHelper.instance;
-  }
+  private static COLLECTION_NAMES: Record<string, string> = {
+    DB_USERS: 'usersCollection',
+    DB_TODO: 'todoCollection'
+  };
 
   public static converterAssignTypes<T extends {}>() {
     return {
@@ -40,16 +36,4 @@ export class FirebaseHelper {
       },
     };
   };
-
-  public async getRecordByField(
-    collectionName: keyof FirebaseHelper["collections"],
-    field: string,
-    operator: FirebaseFirestore.WhereFilterOp,
-    value: string
-  ) {
-    const collection = this.collections[collectionName];
-    const doc = await collection.where(field, operator, value).get();
-
-    return doc.docs[0]?.data() ?? null;
-  }
 };
