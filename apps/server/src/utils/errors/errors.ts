@@ -29,5 +29,25 @@ export class AuthFailed extends ErrorWithCode {
       401,
       ErrorCodes.WRONG_AUTH_DATA_ERROR
     )
-  }
-}
+  };
+};
+
+export class UserNotFoundError extends ErrorWithCode {
+  constructor() {
+    super(
+      "User not found",
+      404,
+      ErrorCodes.USER_NOT_FOUND_ERROR
+    );
+  };
+};
+
+export class UserAlreadyExistError extends ErrorWithCode {
+  constructor() {
+    super(
+      "User already exist",
+      409,
+      ErrorCodes.USER_ALREADY_EXIST
+    );
+  };
+};

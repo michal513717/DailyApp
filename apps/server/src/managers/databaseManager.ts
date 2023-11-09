@@ -2,11 +2,16 @@ import { Manager } from "../common/common.manager.config";
 import { Collections, RecordValue } from "../models/database.models";
 import { FirebaseHelper } from "../utils/firebase/firebaseHelper";
 
-export class DatabaseManager extends Manager {
+class DatabaseManager extends Manager {
 
   protected static instance: DatabaseManager;
   private db!: FirebaseFirestore.Firestore;
   private collections!: Collections;
+
+  public static COLLECTION_NAMES: Record<string, keyof Collections> = {
+    USERS_COLLECTIONS: "USERS_COLLECTION",
+    TODO_COLLECTION: "TODO_COLLECTION",
+  };
 
   constructor() {
 

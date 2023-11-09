@@ -1,22 +1,12 @@
-import { MongoClient } from "mongodb";
-import * as mongoDB from 'mongodb';
-import { env } from "../utils/env";
+import admin from "firebase-admin";
+import { initializeApp } from "firebase-admin/app";
 
-export async function connectToDatabase(): Promise<mongoDB.Db | null> {
-  try {
-    const client: MongoClient = new MongoClient(env.DB_CONN_URL);
+const initFireBaseApp = () => {
+  const serviceAccount = require("../utils/firebase/daily-app-3950f-firebase-adminsdk-xrpjh-718d336ae5.json");
 
-    await client.connect();
-  
-    const db: mongoDB.Db = client.db(env.DB_NAME);
-  
-    console.log(`Successfully connected to database: ${db.databaseName}.`);
-  
-    return db; 
-  } catch (error) {
-    
-    console.log(`Error during connection database`, error);
-
-    return null;
-  }
+  initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+  });
 };
+
+export default initFireBaseApp;

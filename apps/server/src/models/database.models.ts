@@ -10,6 +10,7 @@ export type TodoCollectionRecord = {
 export type UserCollectionRecord = {
   userName: string;
   password: string;
+  createdTime: Timestamp;
 };
 
 export type Collections = {
