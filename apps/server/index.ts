@@ -4,23 +4,23 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
 import * as http from "http";
-// import { Server } from "socket.io";
-
-// import initFireBaseApp from "./src/lib/firebase";
+import initFireBaseApp from "./src/utils/firebase/index";
 import { env } from "./src/utils/env";
 
-// initFireBaseApp();
+// -------- Locators -------- //
+import ManagerLocator from "./src/lib/locators/managerLocator";
+import ServiceLocator from "./src/lib/locators/serviceLocator";
 
+// -------- Routes -------- //
 import { CommonRoutesConfig } from "./src/common/common.routes.config";
-// import { AssetsRoutes } from "./src/routes/v1/assets.routes";
-// import { AuthRoutes } from "./src/routes/v1/auth.routes";
-// import { GamesRoutes } from "./src/routes/v1/games.routes";
 import { NotValidRoutes } from "./src/routes/notValid.routes";
-// import { NotificationsRoutes } from "./src/routes/v1/notifications.routes";
-// import { QuizzesRoutes } from "./src/routes/v1/quizzes.routes";
-// import { SurveysRoutes } from "./src/routes/v1/surveys.routes";
-// import { UsersRoutes } from "./src/routes/v1/users.routes";
-// import { SocketRoute } from "./src/routes/v3_old/socket.routes.config";
+
+// -------- Managers -------- //
+import { DatabaseManager } from "./src/lib/managers/database.manager";
+
+// -------- Services -------- //
+import { AuthServices } from "./src/lib/services/auth.services";
+
 
 const app = express();
 const port = env.PORT;
@@ -30,19 +30,17 @@ app.use(express.json());
 
 const server = http.createServer(app);
 const routes = [] as Array<CommonRoutesConfig>;
-// const serverIO = new Server(server);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// routes.push(new NotificationsRoutes(app));
-// routes.push(new SocketRoute(app, serverIO));
 // routes.push(new AssetsRoutes(app));
-// routes.push(new AuthRoutes(app));
-// routes.push(new GamesRoutes(app));
-// routes.push(new QuizzesRoutes(app));
-// routes.push(new SurveysRoutes(app));
-// routes.push(new UsersRoutes(app));
 routes.push(new NotValidRoutes(app));
+
+initFireBaseApp();
+
+ManagerLocator.registerManager("DATABASE_MANAGER", new DatabaseManager());
+
+ServiceLocator.registerService("AUTH_SERVICES", new AuthServices());
 
 const runningMessage = `Server running at http://10.0.2.2:${port}`;
 
