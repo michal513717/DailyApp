@@ -14,7 +14,7 @@ export class NotValidRoutes extends CommonRoutesConfig {
 
     this.app.use(express.static(path.join(__dirname, "assets/images")));
 
-    this.app.all("*", async (req, _res, next) => {
+    this.app.all("*", async (req: Request, _res: Response, next: NextFunction) => {
       const err = new Error(`Route ${req.originalUrl} not found`) as Error & {
         statusCode: number;
       };

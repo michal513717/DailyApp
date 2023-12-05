@@ -20,6 +20,7 @@ import { DatabaseManager } from "./src/lib/managers/database.manager";
 
 // -------- Services -------- //
 import { AuthServices } from "./src/lib/services/auth.services";
+import { TokenServices } from "./src/lib/services/token.services";
 
 
 const app = express();
@@ -41,6 +42,7 @@ initFireBaseApp();
 ManagerLocator.registerManager("DATABASE_MANAGER", new DatabaseManager());
 
 ServiceLocator.registerService("AUTH_SERVICES", new AuthServices());
+ServiceLocator.registerService("TOKEN_SERVICES", new TokenServices());
 
 const runningMessage = `Server running at http://10.0.2.2:${port}`;
 

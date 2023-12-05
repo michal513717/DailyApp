@@ -1,6 +1,5 @@
 import type { Application } from "express";
 
-
 export abstract class CommonRoutesConfig {
 
   private routeName: string;
@@ -23,9 +22,6 @@ export abstract class CommonRoutesConfig {
     NOTIFICATIONS: "NotificationsRoutes",
     ASSETS: "Assets control",
     AUTH: "Auth control",
-    GAMES_OPTIONS: "Games options",
-    QUIZZES: "Quizzes control",
-    SURVEYS: "Surveys control",
     USERS: "Users control",
   };
 

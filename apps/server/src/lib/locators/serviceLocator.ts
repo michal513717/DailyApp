@@ -1,19 +1,13 @@
 import { Services } from '../models/service.models';
 import { ValueOf } from '../models/common.models';
+import { CommonLocator } from '../../common/common.locator.config';
 
-class ServiceLocator {
+class ServiceLocator extends CommonLocator<Services> {
 
   protected services: Services = {
-    AUTH_SERVICES: null
-  };
-
-  public registerService(serviceName: keyof Services, serviceInstance: ValueOf<Services>): void {
-    this.services[serviceName] = serviceInstance;
-  };
-
-  public getService(serviceName: keyof Services): ValueOf<Services> | null {
-    return this.services[serviceName];
-  };
+    AUTH_SERVICES: null,
+    TOKEN_SERVICES: null
+  } as unknown as Services;
 }
 
 var instance = new ServiceLocator();
